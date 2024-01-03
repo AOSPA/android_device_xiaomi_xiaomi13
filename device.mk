@@ -101,6 +101,10 @@ PRODUCT_COPY_FILES += \
 PRODUCT_PACKAGES += \
     android.hardware.authsecret@1.0.vendor
 
+# Boot Animation
+PRODUCT_COPY_FILES += \
+    vendor/aospa/bootanimation/1440/bootanimation.zip:$(TARGET_COPY_OUT_ODM)/overlayfs/nuwa/product/media/bootanimation.zip
+
 # Boot Control
 PRODUCT_PACKAGES += \
     android.hardware.boot@1.2-impl-qti \
