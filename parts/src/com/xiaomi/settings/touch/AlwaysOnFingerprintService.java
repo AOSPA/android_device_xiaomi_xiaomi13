@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Paranoid Android
+ * Copyright (C) 2023-2024 Paranoid Android
  *
  * SPDX-License-Identifier: Apache-2.0
  */
@@ -22,6 +22,7 @@ import android.os.SystemProperties;
 import android.os.UserHandle;
 import android.provider.Settings;
 import android.util.Log;
+import android.view.Display;
 
 public class AlwaysOnFingerprintService extends Service {
 
@@ -70,6 +71,7 @@ public class AlwaysOnFingerprintService extends Service {
     private final class ScreenStateReceiver extends BroadcastReceiver {
         public void register() {
             if (DEBUG) Log.d(TAG, "ScreenStateReceiver: register");
+            registerReceiver(mScreenStateReceiver, new IntentFilter(Intent.ACTION_DISPLAY_STATE_CHANGED));
             registerReceiver(mScreenStateReceiver, new IntentFilter(Intent.ACTION_SCREEN_ON));
             registerReceiver(mScreenStateReceiver, new IntentFilter(Intent.ACTION_SCREEN_OFF));
         }
@@ -79,17 +81,15 @@ public class AlwaysOnFingerprintService extends Service {
             switch (intent.getAction()) {
                 case Intent.ACTION_SCREEN_ON:
                     if (DEBUG) Log.d(TAG, "Received ACTION_SCREEN_ON");
-                    TfWrapper.setTouchFeature(
-                            new TfWrapper.TfParams(/*TOUCH_FOD_ENABLE*/ 10, 0));
-                    TfWrapper.setTouchFeature(
-                            new TfWrapper.TfParams(/*TOUCH_FODICON_ENABLE*/16, 0));
+                    updateAofStatus();
                     break;
                 case Intent.ACTION_SCREEN_OFF:
                     if (DEBUG) Log.d(TAG, "Received ACTION_SCREEN_OFF");
-                    TfWrapper.setTouchFeature(
-                            new TfWrapper.TfParams(/*TOUCH_FOD_ENABLE*/ 10, mIsAofEnabled ? 1 : 0));
-                    TfWrapper.setTouchFeature(
-                            new TfWrapper.TfParams(/*TOUCH_FODICON_ENABLE*/16, mIsAofEnabled ? 1 : 0));
+                    updateAofStatus();
+                    break;
+                case Intent.ACTION_DISPLAY_STATE_CHANGED:
+                    if (DEBUG) Log.d(TAG, "Received ACTION_DISPLAY_STATE_CHANGED");
+                    updateAofStatus();
                     break;
             }
         }
@@ -121,6 +121,31 @@ public class AlwaysOnFingerprintService extends Service {
             if (uri.equals(Settings.Secure.getUriFor(SECURE_KEY_TAP))
                     || uri.equals(Settings.Secure.getUriFor(SECURE_KEY_UDFPS))) {
                 update();
+            }
+        }
+    }
+
+    private void updateAofStatus() {
+        int displayState = getDisplay().getState();
+        if (displayState == Display.STATE_ON) {
+            TfWrapper.setTouchFeature(
+                    new TfWrapper.TfParams(/*TOUCH_FOD_ENABLE*/ 10, 0));
+            TfWrapper.setTouchFeature(
+                    new TfWrapper.TfParams(/*TOUCH_AOD_ENABLE*/ 11, 0));
+            TfWrapper.setTouchFeature(
+                    new TfWrapper.TfParams(/*TOUCH_FODICON_ENABLE*/ 16, 0));
+        } else {
+            TfWrapper.setTouchFeature(
+                    new TfWrapper.TfParams(/*TOUCH_FOD_ENABLE*/ 10, mIsAofEnabled ? 1 : 0));
+            TfWrapper.setTouchFeature(
+                    new TfWrapper.TfParams(/*TOUCH_FODICON_ENABLE*/ 16, mIsAofEnabled ? 1 : 0));
+            if (displayState == Display.STATE_DOZE
+                    || displayState == Display.STATE_DOZE_SUSPEND) {
+                TfWrapper.setTouchFeature(
+                        new TfWrapper.TfParams(/*TOUCH_AOD_ENABLE*/ 11, 1));
+            } else {
+                TfWrapper.setTouchFeature(
+                        new TfWrapper.TfParams(/*TOUCH_AOD_ENABLE*/ 11, 0));
             }
         }
     }
