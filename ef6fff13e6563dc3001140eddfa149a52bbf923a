@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "38de18c9_fed7f2b3",
+        "filename": "parts/src/com/xiaomi/settings/touch/AlwaysOnFingerprintService.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 127,
+      "author": {
+        "id": 1000101
+      },
+      "writtenOn": "2024-02-28T10:57:34Z",
+      "side": 1,
+      "message": "Remove the white spaces here plox",
+      "revId": "ef6fff13e6563dc3001140eddfa149a52bbf923a",
+      "serverId": "3162e3d8-d894-470e-abd9-724f7b0effad"
+    }
+  ]
+}
