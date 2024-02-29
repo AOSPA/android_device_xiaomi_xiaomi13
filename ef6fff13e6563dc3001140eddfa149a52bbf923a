@@ -16,6 +16,24 @@
       "message": "Remove the white spaces here plox",
       "revId": "ef6fff13e6563dc3001140eddfa149a52bbf923a",
       "serverId": "3162e3d8-d894-470e-abd9-724f7b0effad"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0b7e31ae_0a13c179",
+        "filename": "parts/src/com/xiaomi/settings/touch/AlwaysOnFingerprintService.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 127,
+      "author": {
+        "id": 1000143
+      },
+      "writtenOn": "2024-02-29T07:38:12Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "38de18c9_fed7f2b3",
+      "revId": "ef6fff13e6563dc3001140eddfa149a52bbf923a",
+      "serverId": "3162e3d8-d894-470e-abd9-724f7b0effad"
     }
   ]
 }
