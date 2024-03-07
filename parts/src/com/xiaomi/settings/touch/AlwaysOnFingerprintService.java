@@ -135,8 +135,6 @@ public class AlwaysOnFingerprintService extends Service {
         if (displayState == Display.STATE_ON) {
             TfWrapper.setTouchFeature(
                     new TfWrapper.TfParams(/*TOUCH_AOD_ENABLE*/ 11, 0));
-            TfWrapper.setTouchFeature(
-                    new TfWrapper.TfParams(/*TOUCH_FODICON_ENABLE*/ 16, 0));
             if (FileUtils.readLineInt(FOD_PRESS_STATUS_PATH) == 1) {
                 if (DEBUG) Log.d(TAG, "updateAofStatus: FOD active, dont update TOUCH_FOD_ENABLE!");
                 return;
@@ -146,8 +144,6 @@ public class AlwaysOnFingerprintService extends Service {
         } else {
             TfWrapper.setTouchFeature(
                     new TfWrapper.TfParams(/*TOUCH_FOD_ENABLE*/ 10, mIsAofEnabled ? 1 : 0));
-            TfWrapper.setTouchFeature(
-                    new TfWrapper.TfParams(/*TOUCH_FODICON_ENABLE*/ 16, mIsAofEnabled ? 1 : 0));
             TfWrapper.setTouchFeature(
                     new TfWrapper.TfParams(/*TOUCH_AOD_ENABLE*/ 11, displayStateDoze ? 1 : 0));
         }
