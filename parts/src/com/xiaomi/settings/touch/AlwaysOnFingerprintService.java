@@ -24,6 +24,8 @@ import android.provider.Settings;
 import android.util.Log;
 import android.view.Display;
 
+import com.xiaomi.settings.utils.FileUtils;
+
 public class AlwaysOnFingerprintService extends Service {
 
     private static final String TAG = "XiaomiPartsAlwaysOnFingerprintService";
@@ -31,6 +33,8 @@ public class AlwaysOnFingerprintService extends Service {
 
     private static final String SECURE_KEY_TAP = "doze_tap_gesture";
     private static final String SECURE_KEY_UDFPS = "screen_off_udfps_enabled";
+
+    private static final String FOD_PRESS_STATUS_PATH = "/sys/class/touch/touch_dev/fod_press_status";
 
     private boolean mIsAofEnabled;
 
@@ -133,6 +137,10 @@ public class AlwaysOnFingerprintService extends Service {
                     new TfWrapper.TfParams(/*TOUCH_AOD_ENABLE*/ 11, 0));
             TfWrapper.setTouchFeature(
                     new TfWrapper.TfParams(/*TOUCH_FODICON_ENABLE*/ 16, 0));
+            if (FileUtils.readLineInt(FOD_PRESS_STATUS_PATH) == 1) {
+                if (DEBUG) Log.d(TAG, "updateAofStatus: FOD active, dont update TOUCH_FOD_ENABLE!");
+                return;
+            }
             TfWrapper.setTouchFeature(
                     new TfWrapper.TfParams(/*TOUCH_FOD_ENABLE*/ 10, 0));
         } else {
